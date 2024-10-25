@@ -7,7 +7,6 @@ int main() {
     const char * nomeArquivo = "filmes.txt";
     int opcao, id;
 
-    // Carregar os filmes do arquivo no início do programa
     carregarFilmesDoArquivo(&listaFilmes, nomeArquivo);
 
     do {
@@ -17,9 +16,8 @@ int main() {
         printf("3. Excluir Filme\n");
         printf("4. Editar Filme\n");
         printf("0. Sair\n");
-        printf("Escolha uma opção: ");
-        scanf("%d", &opcao);
-        getchar();  // Limpar o buffer
+      
+      opcao = obterOpcaoMenu();
 
         switch (opcao) {
             case 1:
@@ -32,14 +30,14 @@ int main() {
             case 3:
                 printf("Digite o ID do filme que deseja excluir: ");
                 scanf("%d", &id);
-                getchar();  // Limpar o buffer
+                getchar(); 
                 excluirFilme(&listaFilmes, id);
                 salvarFilmesNoArquivo(listaFilmes, nomeArquivo);
                 break;
             case 4:
                 printf("Digite o ID do filme que deseja editar: ");
                 scanf("%d", &id);
-                getchar();  // Limpar o buffer
+                getchar(); 
                 editarFilme(listaFilmes, id);
                 salvarFilmesNoArquivo(listaFilmes, nomeArquivo);
                 break;

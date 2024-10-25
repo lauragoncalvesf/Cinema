@@ -1,0 +1,36 @@
+ID: 1
+Nome: cinderela
+Genero: desenho
+Ano: 1979
+Classificacao: 10
+-----------------------------------
+ID: 2
+Nome: Tres Porquinhos
+Genero: desenho
+Ano: 1989
+Classificacao: 10
+-----------------------------------
+ID: 5
+Nome: Bela e a fera
+Genero: desenho
+Ano: 0
+Classificacao: 0
+-----------------------------------
+ID: 10
+Nome: Branca de neve
+Genero: desenho
+Ano: 1963
+Classificacao: 10
+-----------------------------------
+ID: 11
+Nome: Rapunzel
+Genero: desenho
+Ano: 1949
+Classificacao: 18
+-----------------------------------
+ID: 12
+Nome: Enrolados
+Genero: desenho
+Ano: 200
+Classificacao: 0
+-----------------------------------

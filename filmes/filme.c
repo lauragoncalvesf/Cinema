@@ -3,6 +3,87 @@
 #include <string.h>
 #include "filme.h"
 
+
+int apenasLetras(const char *str){
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (!isalpha(str[i]) && str[i] != ' ')
+        {
+            return 0; 
+        }
+    }
+    return 1;
+}
+
+int apenasNumeros(const char *str){
+    for (int i = 0; i < strlen(str); i++)
+    {
+        if (!isdigit(str[i]))
+        {
+            return 0; 
+        }
+    }
+    return 1; 
+}
+
+void obterEntradaApenasCaracteres(char *buffer, int tamanho, const char *prompt) {
+    char entradaTemp[tamanho];
+
+    while (1) {
+        printf("%s", prompt);
+        fgets(entradaTemp, tamanho, stdin);
+        entradaTemp[strcspn(entradaTemp, "\n")] = 0; 
+
+        if (strlen(entradaTemp) > 0 && apenasLetras(entradaTemp)) {
+            strcpy(buffer, entradaTemp);
+            break;
+        } else {
+            printf("Entrada inválida! Por favor, insira apenas letras.\n");
+        }
+    }
+}
+
+void obterEntradaApenasNumeros(int *valor, int tamanho, const char *prompt) {
+    char entradaTemp[tamanho];
+
+    while (1) {
+        printf("%s", prompt);
+        fgets(entradaTemp, tamanho, stdin);
+        entradaTemp[strcspn(entradaTemp, "\n")] = 0;
+
+        if (strlen(entradaTemp) > 0 && apenasNumeros(entradaTemp)) {
+            *valor = atoi(entradaTemp); 
+            break;
+        } else {
+            printf("Entrada inválida! Por favor, insira apenas números.\n");
+        }
+    }
+}
+
+int obterOpcaoMenu(){
+    char entrada[50]; 
+    int opcao = -1;
+
+    while (1)
+    {
+        printf("Digite uma opção do menu: ");
+        fgets(entrada, 50, stdin);             
+        entrada[strcspn(entrada, "\n")] = '\0'; 
+
+        if (apenasNumeros(entrada))
+        {
+            opcao = atoi(entrada); 
+            break;
+        }
+        else
+        {
+            printf("Entrada inválida! Por favor, insira um número.\n");
+        }
+    }
+
+    return opcao;
+}
+
 // Função para salvar a lista de filmes no arquivo
 void salvarFilmesNoArquivo(Filme* lista, const char* nomeArquivo) {
     FILE* arquivo = fopen(nomeArquivo, "w");
@@ -73,21 +154,13 @@ void adicionarFilme(Filme** lista) {
         return;
     }
 
-    printf("Digite o título do filme: ");
-    fgets(novoFilme->nome, sizeof(novoFilme->nome), stdin);
-    novoFilme->nome[strcspn(novoFilme->nome, "\n")] = '\0';
+    obterEntradaApenasCaracteres(novoFilme->nome, sizeof(novoFilme->nome), "Título do filme: ");
 
-    printf("Digite o gênero do filme: ");
-    fgets(novoFilme->genero, sizeof(novoFilme->genero), stdin);
-    novoFilme->genero[strcspn(novoFilme->genero, "\n")] = '\0';
+    obterEntradaApenasCaracteres(novoFilme->genero, sizeof(novoFilme->genero), "Gênero do filme: ");
 
-    printf("Digite o ano do filme: ");
-    scanf("%d", &novoFilme->ano);
-    getchar();  // Limpar o buffer
+    obterEntradaApenasNumeros(&novoFilme->ano, 10, "Ano do filme: ");
 
-    printf("Digite a classificação indicativa do filme: ");
-    scanf("%d", &novoFilme->classificacao);
-    getchar();  // Limpar o buffer
+    obterEntradaApenasNumeros(&novoFilme->classificacao, 10, "Classificação indicativa do filme: ");
 
     novoFilme->proximo = NULL;
 
@@ -110,20 +183,25 @@ void adicionarFilme(Filme** lista) {
 // Função para exibir os filmes cadastrados
 void exibirFilmes(Filme* lista) {
     Filme* atual = lista;
+    int count = 0;
+    
     if (atual == NULL) {
         printf("\nNenhum filme armazenado.\n");
         return;
     }
+    
     printf("\n-----------------------------\n");
     while (atual != NULL) {
         printf("ID: %d\n", atual->id);
         printf("Título: %s\n", atual->nome);
         printf("Gênero: %s\n", atual->genero);
-        printf("Ano: %d \n", atual->ano);
+        printf("Ano: %d\n", atual->ano);
         printf("Classificação indicativa: %d\n", atual->classificacao);
         printf("-----------------------------\n");
         atual = atual->proximo;
+        count++;
     }
+    printf("Total de filmes cadastrados: %d\n", count);
 }
 
 // Função para excluir um filme da lista
@@ -170,21 +248,22 @@ void editarFilme(Filme* lista, int id) {
 
     printf("Editando filme com ID %d:\n", id);
 
+    // Usando a função de entrada apenas caracteres para o nome
     printf("Novo título (atual: %s): ", atual->nome);
-    fgets(atual->nome, sizeof(atual->nome), stdin);
-    atual->nome[strcspn(atual->nome, "\n")] = '\0';
+    obterEntradaApenasCaracteres(atual->nome, sizeof(atual->nome), "");
 
+    // Usando a função de entrada apenas caracteres para o gênero
     printf("Novo gênero (atual: %s): ", atual->genero);
-    fgets(atual->genero, sizeof(atual->genero), stdin);
-    atual->genero[strcspn(atual->genero, "\n")] = '\0';
+    obterEntradaApenasCaracteres(atual->genero, sizeof(atual->genero), "");
 
-    printf("Nova ano (atual: %d minutos): ", atual->ano);
-    scanf("%d", &atual->ano);
-    getchar();  // Limpar o buffer
+    // Usando a função de entrada apenas números para o ano
+    printf("Novo ano (atual: %d): ", atual->ano);
+    obterEntradaApenasNumeros(&atual->ano, 4, "");
 
+    // Usando a função de entrada apenas números para a classificação
     printf("Nova classificação indicativa (atual: %d): ", atual->classificacao);
-    scanf("%d", &atual->classificacao);
-    getchar();  // Limpar o buffer
+    obterEntradaApenasNumeros(&atual->classificacao, 3, "");
 
     printf("Filme com ID %d editado com sucesso!\n", id);
 }
+
